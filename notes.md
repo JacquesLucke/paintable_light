@@ -7,3 +7,4 @@
 * Use LEDs of different sizes
 * Use SMD pin connectors
 * Expose power pads for soldering battery or usb connector.
+* Add possibility to switch power externally.
