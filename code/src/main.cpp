@@ -71,6 +71,7 @@ void loop() {
 
     delay(50);
 
+    __disable_irq();
     send_byte(values[0]);
     send_byte(values[1]);
     send_byte(values[2]);
@@ -82,5 +83,6 @@ void loop() {
     send_byte(values[6]);
     send_byte(values[7]);
     send_byte(values[8]);
+    __enable_irq();
   }
 }
