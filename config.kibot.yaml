@@ -1,0 +1,52 @@
+kibot:
+  version: 1
+
+import:
+  - file: JLCPCB
+
+outputs:
+  - name: Render PCB top side
+    type: pcbdraw
+    options:
+      format: png
+      show_components: all
+      output: output/%f_pcb_top.png
+  - name: render PCB bottom side
+    type: pcbdraw
+    options:
+      format: png
+      show_components: all
+      bottom: true
+      output: output/%f_pcb_bottom.png
+  - name: Generate Schematic PDF
+    type: pdf_sch_print
+    options:
+      output: output/%f_schematic.pdf
+  - name: 3D Render Top
+    type: blender_export
+    options:
+      render_options:
+        samples: 10
+        transparent_background: true
+      light:
+        - energy: 3
+          type: SUN
+      outputs:
+        - type: render
+          output: output/%f_3d_render_top.png
+      point_of_view:
+        - rotate_x: 20
+  - name: 3D Render Bottom
+    type: blender_export
+    options:
+      render_options:
+        samples: 10
+        transparent_background: true
+      light:
+        - energy: 3
+          type: SUN
+      outputs:
+        - type: render
+          output: output/%f_3d_render_bottom.png
+      point_of_view:
+        - rotate_x: 200

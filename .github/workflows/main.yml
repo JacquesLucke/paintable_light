@@ -1,0 +1,33 @@
+name: Generate
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  kibot:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: KiBot
+      uses: INTI-CMNB/KiBot@v2_k9
+      with:
+        config: config.kibot.yaml
+    - name: Upload
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: output/
+  deploy:
+    needs: kibot
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
