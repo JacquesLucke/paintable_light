@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "front_leds")(type "KiCad")(uri "${KIPRJMOD}/front_leds.pretty")(options "")(descr ""))
+)
