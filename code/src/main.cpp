@@ -2,6 +2,7 @@
 #include <array>
 
 constexpr int led_pin = C1;
+constexpr int led_num = 9;
 
 void setup() { pinMode(led_pin, OUTPUT); }
 
@@ -61,28 +62,79 @@ static uint8_t get_brightness_at_time(int32_t time, int led_i) {
   return smooth_brightnesses[index];
 }
 
-void loop() {
+void send_values(const uint8_t values[led_num]) {
+  __disable_irq();
+  send_byte(values[0]);
+  send_byte(values[1]);
+  send_byte(values[2]);
+
+  send_byte(values[3]);
+  send_byte(values[4]);
+  send_byte(values[5]);
+
+  send_byte(values[6]);
+  send_byte(values[7]);
+  send_byte(values[8]);
+  __enable_irq();
+}
+
+[[maybe_unused]] static void random_dimming() {
   while (true) {
     const int32_t now = millis();
-    uint8_t values[9];
-    for (int i = 0; i < 9; i++) {
+    uint8_t values[led_num];
+    for (int i = 0; i < led_num; i++) {
       values[i] = get_brightness_at_time(now, i);
     }
-
+    send_values(values);
     delay(50);
-
-    __disable_irq();
-    send_byte(values[0]);
-    send_byte(values[1]);
-    send_byte(values[2]);
-
-    send_byte(values[3]);
-    send_byte(values[4]);
-    send_byte(values[5]);
-
-    send_byte(values[6]);
-    send_byte(values[7]);
-    send_byte(values[8]);
-    __enable_irq();
   }
 }
+
+[[maybe_unused]] static void traffic_option1() {
+  while (true) {
+    constexpr int on_time_ms = 10'000;
+    constexpr int off_time_ms = 15'000;
+    constexpr int period_ms = on_time_ms + off_time_ms;
+    const int32_t now = millis();
+    const int32_t period_now = now % period_ms;
+    uint8_t values[led_num];
+    if (period_now < on_time_ms) {
+      for (int i = 0; i < led_num; i++) {
+        values[i] = 255;
+      }
+    } else {
+      for (int i = 0; i < led_num; i++) {
+        values[i] = 0;
+      }
+    }
+    send_values(values);
+    delay(50);
+  }
+}
+
+[[maybe_unused]] static void traffic_option2() {
+  while (true) {
+    constexpr int left_ms = 15'000;
+    constexpr int right_ms = 15'000;
+    constexpr int period_ms = left_ms + right_ms;
+    const int32_t now = millis();
+    const int32_t period_now = now % period_ms;
+    uint8_t values[led_num];
+    for (int i = 0; i < led_num; i++) {
+      values[i] = 0;
+    }
+    if (period_now < left_ms) {
+      for (int i = 0; i < 4; i++) {
+        values[i] = 255;
+      }
+    } else {
+      for (int i = 4; i < 8; i++) {
+        values[i] = 255;
+      }
+    }
+    send_values(values);
+    delay(50);
+  }
+}
+
+void loop() { random_dimming(); }
