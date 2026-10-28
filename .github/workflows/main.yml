@@ -11,7 +11,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: KiBot
-      uses: INTI-CMNB/KiBot@v2_k9
+      uses: INTI-CMNB/KiBot@v2_k10
       with:
         config: config.kibot.yaml
         schema: pcb/paintable_light.kicad_sch
