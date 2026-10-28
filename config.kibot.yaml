@@ -1,6 +1,12 @@
 kibot:
   version: 1
 
+# Match manufactured board: white solder mask, black silkscreen.
+# Used by blender_export / documentation defaults.
+global:
+  solder_mask_color: white
+  silk_screen_color: black
+
 import:
   - file: JLCPCB
 
@@ -11,6 +17,13 @@ outputs:
       format: png
       show_components: all
       output: output/%f_pcb_top.png
+      style:
+        board: '#ffffff'
+        copper: '#e0e0e0'
+        silk: '#000000'
+        clad: '#cabb3e'
+        pads: '#8b898c'
+        outline: '#000000'
   - name: render PCB bottom side
     type: pcbdraw
     options:
@@ -18,6 +31,13 @@ outputs:
       show_components: all
       bottom: true
       output: output/%f_pcb_bottom.png
+      style:
+        board: '#ffffff'
+        copper: '#e0e0e0'
+        silk: '#000000'
+        clad: '#cabb3e'
+        pads: '#8b898c'
+        outline: '#000000'
   - name: Generate Schematic PDF
     type: pdf_sch_print
     options:
